@@ -7,8 +7,6 @@ const create = async (email, password) => {
     where: { email },
   });
 
-  console.log(loginExists);
-
   if (error.type) return error;
 
   if (loginExists.length === 0) return { type: 'INVALID_FIELDS', message: 'Invalid fields' };
