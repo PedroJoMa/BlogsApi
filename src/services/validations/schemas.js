@@ -12,7 +12,10 @@ const validateUser = Joi.object({
   image: Joi.string(),
 });
 
+const validateCategory = Joi.string().required();
+
 module.exports = {
   validateLogin,
   validateUser,
+  validateCategory,
 };

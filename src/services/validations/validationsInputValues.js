@@ -1,4 +1,4 @@
-const { validateLogin, validateUser } = require('./schemas');
+const { validateLogin, validateUser, validateCategory } = require('./schemas');
 
 const validateNewLogin = (email, password) => {
   const { error } = validateLogin
@@ -21,7 +21,16 @@ const validateNewUser = (displayName, email, password, image) => {
     return { type: null, message: '' };
 };
 
+const validateName = (name) => {
+  const { error } = validateCategory.validate(name);
+
+  if (error) return { type: 'INVALID_FIELDS', message: error.message };
+
+  return { type: '', message: '' };
+};
+
 module.exports = {
   validateNewLogin,
   validateNewUser,
+  validateName,
 };

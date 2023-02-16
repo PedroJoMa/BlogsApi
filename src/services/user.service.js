@@ -7,8 +7,6 @@ const create = async (displayName, email, password, image) => {
     where: { email },
   });
 
-  console.log(userExists);
-
   if (error.type) return error;
 
   if (userExists.length > 0) {
