@@ -24,7 +24,7 @@ const validateNewUser = (displayName, email, password, image) => {
 const validateName = (name) => {
   const { error } = validateCategory.validate(name);
 
-  if (error) return { type: 'INVALID_FIELDS', message: error.message };
+  if (error) return { type: 'INVALID_FIELDS', message: '"name" is required' };
 
   return { type: '', message: '' };
 };

@@ -1,15 +1,21 @@
 const { Category } = require('../models');
 const { validateName } = require('./validations/validationsInputValues');
 
-const create = async (name) => {
+const insert = async (name) => {
   const error = validateName(name);
-  const newCategory = await Category.create({ name });
-  
+
   if (error.type) return error;
+  await Category.create({ name });
+
+  const newCategory = await Category.findOne({
+    where: { name },
+  });
+
+  if (!newCategory) return { type: 'NOT_EXIST', message: 'Name does not exist' };
 
   return { type: null, message: newCategory };
 };
 
 module.exports = {
-  create,
+  insert,
 };
