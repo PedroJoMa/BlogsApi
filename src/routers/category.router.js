@@ -10,4 +10,10 @@ router.post(
   categoryController.create,
 );
 
+router.get(
+  '/',
+  verifyToken,
+  categoryController.getAll,
+);
+
 module.exports = router;
