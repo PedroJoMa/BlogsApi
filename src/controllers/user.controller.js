@@ -19,7 +19,18 @@ const getAll = async (_req, res) => {
   return res.status(mapStatus(type)).json(message);
 };
 
+const getById = async (req, res) => {
+  const { id } = req.params;
+
+  const { type, message } = await userService.getById(id);
+
+  if (type) return res.status(mapStatus(type)).json({ message });
+
+  return res.status(statusCodes.OK).json(message);
+};
+
 module.exports = {
   create,
   getAll,
+  getById,
 };

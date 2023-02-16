@@ -15,4 +15,10 @@ router.get(
   userController.getAll,
 );
 
+router.get(
+  '/:id',
+  verifyToken,
+  userController.getById,
+);
+
 module.exports = router;
