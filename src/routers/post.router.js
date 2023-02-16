@@ -16,4 +16,10 @@ router.get(
   postController.getAll,
 );
 
+router.get(
+  '/:id',
+  verifyToken,
+  postController.getById,
+);
+
 module.exports = router;

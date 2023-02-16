@@ -1,5 +1,5 @@
 const { BlogPost, User, Category } = require('../models');
-const { validateNewPost } = require('./validations/validationsInputValues');
+const { validateNewPost, validateId } = require('./validations/validationsInputValues');
 
 const insert = async (title, content, categoryIds) => {
   const error = validateNewPost(title, content, categoryIds);
@@ -17,11 +17,29 @@ const getAll = async () => {
       { model: Category, as: 'categories', through: { attributes: [] } },
     ],
   });
-  // console.log(posts);
+
   return posts;
+};
+
+const getById = async (id) => {
+  const error = validateId(id);
+  const post = await BlogPost.findOne({ 
+    where: { id },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+
+  if (error.type) return error;
+
+  if (!post) return { type: 'NOT_EXIST', message: 'Post does not exist' };
+
+  return { type: '', message: post };
 };
 
 module.exports = {
   insert,
   getAll,
+  getById,
 };

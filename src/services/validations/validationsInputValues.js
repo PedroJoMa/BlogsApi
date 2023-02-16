@@ -1,4 +1,6 @@
-const { validateLogin, validateUser, validateCategory, validatePost } = require('./schemas');
+const { 
+  validateLogin, validateUser, validateCategory, validatePost, validateFieldId,
+} = require('./schemas');
 
 const validateNewLogin = (email, password) => {
   const { error } = validateLogin
@@ -38,9 +40,18 @@ const validateNewPost = (title, content, categoryIds) => {
   return { type: null, message: '' };
 };
 
+const validateId = (id) => {
+  const { error } = validateFieldId.validate(id);
+
+  if (error) return { type: 'NOT_EXIST', message: error.message };
+
+  return { type: null, message: '' };
+};
+
 module.exports = {
   validateNewLogin,
   validateNewUser,
   validateName,
   validateNewPost,
+  validateId,
 };
