@@ -13,6 +13,13 @@ const create = async (req, res) => {
   return res.status(statusCodes.CREATED).json({ token });
 };
 
+const getAll = async (_req, res) => {
+  const { type, message } = await userService.getAll();
+
+  return res.status(mapStatus(type)).json(message);
+};
+
 module.exports = {
   create,
+  getAll,
 };
