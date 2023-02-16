@@ -12,7 +12,7 @@ const insert = async (req, res) => {
 };
 
 const getAll = async (_req, res) => {
-  const posts = postService.getAll();
+  const posts = await postService.getAll();
 
   return res.status(statusCodes.OK).json(posts);
 };
