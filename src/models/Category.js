@@ -1,24 +1,17 @@
-const PostCategoryModel = require("./PostCategory");
-
-const CategoryModel = (sequelize, DataTypes) => {
-  const Category = sequelize.define(
-    'Category',
-    {
-    id: {type: DataTypes.INTEGER, primaryKey: true},
+function CategorySchema (sequelize, DataTypes) {
+  const CategoryTable = sequelize.define('Category',
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: DataTypes.STRING,
   },
   {
-    timestamps: false,
     tableName: 'categories',
-  }
-  );
+    timestamps: false,
+    underscored: true,
+  });
 
-  Category.associate = (models) => {
-    Category.hasMany(models.PostCategory, 
-      {foreignKey: 'categoryId', as: 'posts_categories'}
-  )}
+  return CategoryTable;
 
-  return Category;
-};
+}
 
-module.exports = CategoryModel;
+module.exports = CategorySchema;

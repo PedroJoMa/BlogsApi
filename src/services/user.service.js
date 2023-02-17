@@ -1,44 +1,54 @@
-const { validateNewUser } = require('./validations/validationsInputValues');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const { errorMessages, statusCode } = require('../utils/errorMap');
+const { createToken } = require('../utils/JWT');
 const { User } = require('../models');
 
-const create = async (displayName, email, password, image) => {
-  const error = validateNewUser(displayName, email, password, image);
-  const userExists = await User.findAll({ 
-    where: { email },
-  });
+dotenv.config();
+const secret = process.env.JWT_SECRET || 'secret';
 
-  if (error.type) return error;
+async function insertUser(body) {
+  const { email } = body;
+  
+  const user = await User.findOne({ where: { email } });
 
-  if (userExists.length > 0) {
-    return { type: 'ALREADY_CREATED', message: 'User already registered' };
+  if (user) {
+    return { status: statusCode.CONFLICT, message: { message: errorMessages.EXISTING_USER } };
   }
 
-  const newUser = await User.create({ displayName, email, password, image });
+  await User.create(body);
 
-  return { type: '', message: newUser };
-};
+  const token = createToken(email);
+  return { status: statusCode.CREATED, message: { token } };
+}
 
-const getAll = async () => {
-  const users = await User.findAll({
-    attributes: { exclude: ['password'] }, // { attributes: { exclude: ['password'] } } exclui 'password' do retorno
-  });
+async function selectAllUsers() {
+  const users = await User.findAll({ attributes: { exclude: ['password'] } });
 
-  return { type: 'OK', message: users };
-};
+  return { status: statusCode.OK, message: users };
+}
 
-const getById = async (id) => {
-  const userById = await User.findOne({
-    where: { id },
-    attributes: { exclude: ['password'] },
-  });
+async function selectUserById(id) {
+  const user = await User.findOne({ where: { id }, attributes: { exclude: ['password'] } });
 
-  if (!userById) return { type: 'NOT_EXIST', message: 'User does not exist' };
+  if (!user) {
+    return { status: statusCode.NOT_FOUND, message: { message: errorMessages.USER_NOT_FOUND } };
+  }
 
-  return { type: '', message: userById };
-};
+  return { status: statusCode.OK, message: user };
+}
+
+async function deleteUser(token) {
+  const { data } = await jwt.verify(token, secret);
+  const { dataValues } = await User.findOne({ where: { email: data } });
+  await User.destroy(
+    { where: { id: dataValues.id } },
+  );
+}
 
 module.exports = {
-  create,
-  getAll,
-  getById,
+  insertUser,
+  selectAllUsers,
+  selectUserById,
+  deleteUser,
 };

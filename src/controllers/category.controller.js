@@ -1,23 +1,18 @@
-const { statusCodes, mapStatus } = require('../statusCodes');
-const { categoryService } = require('../services');
+const categoryService = require('../services/category.service');
 
-const create = async (req, res) => {
-  const { name } = req.body;
+async function insertCategory(req, res) {
+  const result = await categoryService.insertCategory(req.body);
 
-  const { type, message } = await categoryService.insert(name);
+  res.status(result.status).json(result.message);
+}
 
-  if (type) return res.status(mapStatus(type)).json({ message });
+async function selectAllCategories(_req, res) {
+  const result = await categoryService.selectAllCategories();
 
-  return res.status(statusCodes.CREATED).json(message);
-};
-
-const getAll = async (_req, res) => {
-  const categories = await categoryService.getAll();
-
-  return res.status(statusCodes.OK).json(categories);
-};
+  res.status(result.status).json(result.message);
+}
 
 module.exports = {
-  create,
-  getAll,
+  insertCategory,
+  selectAllCategories,
 };

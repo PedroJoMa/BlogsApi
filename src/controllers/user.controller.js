@@ -1,36 +1,33 @@
-const { userService } = require('../services');
-const { statusCodes, mapStatus } = require('../statusCodes');
-const { createToken } = require('../utils/jwt');
+const services = require('../services/user.service');
 
-const create = async (req, res) => {
-  const { displayName, email, password, image } = req.body;
-  const token = createToken(email);
+async function insertUser(req, res) {
+  const result = await services.insertUser(req.body);
 
-  const { type, message } = await userService.create(displayName, email, password, image);
+  res.status(result.status).json(result.message);
+}
 
-  if (type) return res.status(mapStatus(type)).json({ message });
+async function selectAllUsers(_req, res) {
+  const result = await services.selectAllUsers();
 
-  return res.status(statusCodes.CREATED).json({ token });
-};
+  res.status(result.status).json(result.message);
+}
 
-const getAll = async (_req, res) => {
-  const { type, message } = await userService.getAll();
-
-  return res.status(mapStatus(type)).json(message);
-};
-
-const getById = async (req, res) => {
+async function selectUserById(req, res) {
   const { id } = req.params;
+  const result = await services.selectUserById(id);
 
-  const { type, message } = await userService.getById(id);
+  res.status(result.status).json(result.message);
+}
 
-  if (type) return res.status(mapStatus(type)).json({ message });
-
-  return res.status(statusCodes.OK).json(message);
-};
+async function deleteUser(req, res) {
+  const token = req.headers.authorization;
+  await services.deleteUser(token);
+  return res.status(204).end();
+}
 
 module.exports = {
-  create,
-  getAll,
-  getById,
+  insertUser,
+  selectAllUsers,
+  selectUserById,
+  deleteUser,
 };

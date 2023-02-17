@@ -1,28 +1,19 @@
+const { statusCode } = require('../utils/errorMap');
 const { Category } = require('../models');
-const { validateName } = require('./validations/validationsInputValues');
 
-const insert = async (name) => {
-  const error = validateName(name);
+async function insertCategory(body) {
+  const category = await Category.create(body);
 
-  if (error.type) return error;
-  await Category.create({ name });
+  return { status: statusCode.CREATED, message: category };
+}
 
-  const newCategory = await Category.findOne({
-    where: { name },
-  });
-
-  if (!newCategory) return { type: 'NOT_EXIST', message: 'Name does not exist' };
-
-  return { type: null, message: newCategory };
-};
-
-const getAll = async () => {
+async function selectAllCategories() {
   const categories = await Category.findAll();
 
-  return categories;
-};
+  return { status: statusCode.OK, message: categories };
+}
 
 module.exports = {
-  insert,
-  getAll,
+  insertCategory,
+  selectAllCategories,
 };
