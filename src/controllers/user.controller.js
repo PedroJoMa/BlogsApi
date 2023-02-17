@@ -4,7 +4,7 @@ const { createToken } = require('../utils/jwt');
 
 const create = async (req, res) => {
   const { displayName, email, password, image } = req.body;
-  const token = createToken({ displayName, email });
+  const token = createToken(email);
 
   const { type, message } = await userService.create(displayName, email, password, image);
 

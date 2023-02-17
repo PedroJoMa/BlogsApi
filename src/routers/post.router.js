@@ -1,5 +1,5 @@
 const express = require('express');
-const { verifyToken } = require('../middlewares');
+const { verifyToken, verifyPostFilds } = require('../middlewares');
 const { postController } = require('../controllers');
 
 const router = express.Router();
@@ -11,15 +11,22 @@ router.post(
 );
 
 router.get(
+  '/:id',
+  verifyToken,
+  postController.getById,
+);
+
+router.get(
   '/',
   verifyToken,
   postController.getAll,
 );
 
-router.get(
+router.put(
   '/:id',
   verifyToken,
-  postController.getById,
+  verifyPostFilds,
+  postController.update,
 );
 
 module.exports = router;

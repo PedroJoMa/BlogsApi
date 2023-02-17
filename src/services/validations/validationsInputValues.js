@@ -1,5 +1,10 @@
 const { 
-  validateLogin, validateUser, validateCategory, validatePost, validateFieldId,
+  validateLogin,
+  validateUser,
+  validateCategory,
+  validatePost,
+  validateFieldId,
+  validateUpdateFields,
 } = require('./schemas');
 
 const validateNewLogin = (email, password) => {
@@ -48,10 +53,19 @@ const validateId = (id) => {
   return { type: null, message: '' };
 };
 
+const validateUpdateValues = (title, content) => {
+  const { error } = validateUpdateFields.validate({ title, content });
+
+  if (error) return { type: 'INVALID_FIELDS', message: 'Some required fields are missing' };
+
+  return { type: null, message: '' };
+};
+
 module.exports = {
   validateNewLogin,
   validateNewUser,
   validateName,
   validateNewPost,
   validateId,
+  validateUpdateValues,
 };

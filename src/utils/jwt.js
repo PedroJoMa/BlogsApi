@@ -11,6 +11,13 @@ const createToken = (data) => {
   return token;
 };
 
+const decryptToken = (token) => {
+  const decryptedToken = Jwt.verify(token, secret);
+
+  return decryptedToken;
+};
+
 module.exports = {
   createToken,
+  decryptToken,
 };

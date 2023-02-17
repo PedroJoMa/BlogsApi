@@ -22,10 +22,16 @@ const validatePost = Joi.object({
 
 const validateFieldId = Joi.number().required();
 
+const validateUpdateFields = Joi.object({
+  title: Joi.string().required(),
+  content: Joi.string().required(),
+});
+
 module.exports = {
   validateLogin,
   validateUser,
   validateCategory,
   validatePost,
   validateFieldId,
+  validateUpdateFields,
 };
